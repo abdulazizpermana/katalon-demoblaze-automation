@@ -13,26 +13,26 @@ String username   = td.getValue('USERNAME', 1)
 String password   = td.getValue('PASSWORD', 1)
 String testCaseId = td.getValue('TEST_CASE_ID', 1)
 
-// ── Init evidence ────────────────────────────────────────────────
+// Init evidence
 EvidenceReporter.initEvidence(testCaseId)
 
-// ── Step 1: Open Browser ─────────────────────────────────────────
+// ── Step 1: Open Browser
 WebUI.openBrowser('')
 WebUI.navigateToUrl(GlobalVariable.BASE_URL)
 WebUI.maximizeWindow()
 EvidenceReporter.captureStep(1, 'Open Login Page', 'PASS')
 
-// ── Step 2: Login ────────────────────────────────────────────────
+// Step 2: Login ────────────────────────────────────────────────
 DemoLoginPage loginPage = new DemoLoginPage()
 loginPage.login(username, password)
 loginPage.waitForWelcomeText()
 EvidenceReporter.captureStep(2, 'Login Success', 'PASS')
 
-// ── Step 3: Verify Welcome Text ──────────────────────────────────
+// Step 3: Verify Welcome Text ──────────────────────────────────
 loginPage.isWelcomeTextVisible()
 EvidenceReporter.captureStep(3, 'Welcome text visible', 'PASS')
 
-// ── Generate PDF ─────────────────────────────────────────────────
+// Generate PDF ─────────────────────────────────────────────────
 PdfReportKeyword.generateReport(
     testCaseId,
     'Verify valid login shows welcome message',
