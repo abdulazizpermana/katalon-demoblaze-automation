@@ -7,9 +7,8 @@
  * @date 2026-05-20
  * @see JIRA Ticket: QA-SSO-DDT
  */
-
-import dto.pages.LoginPage
 import dto.pages.AppointmentPage
+import dto.pages.AppointmentLoginPage
 import utils.EvidenceReporter
 import utils.PdfReportKeyword
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
@@ -53,7 +52,7 @@ EvidenceReporter.captureStep(1, 'Open Login Page', 'PASS')
 // ======================================================
 // STEP 2 — Login
 // ======================================================
-LoginPage loginPage = new LoginPage()
+AppointmentLoginPage loginPage = new AppointmentLoginPage()
 loginPage.login(USERNAME, PASSWORD)
 WebUI.comment("Login dengan username: ${USERNAME}")
 WebUI.delay(2)
