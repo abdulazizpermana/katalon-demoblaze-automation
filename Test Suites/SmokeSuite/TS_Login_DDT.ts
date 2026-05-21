@@ -76,20 +76,4 @@
          <variableId>3d94ac6c-0f27-4816-a494-3bbe97c09ff6</variableId>
       </variableLink>
    </testCaseLink>
-   <testCaseLink>
-      <guid>a263a549-dcc8-4ec0-b163-477658c6806d</guid>
-      <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
-      <testCaseId>Test Cases/Regression/SSO/TC-SSO-002</testCaseId>
-      <testDataLink>
-         <combinationType>ONE</combinationType>
-         <id>47e17ff4-b89e-449b-a3ec-103ff3113feb</id>
-         <iterationEntity>
-            <iterationType>RANGE</iterationType>
-            <value>1-2</value>
-         </iterationEntity>
-         <testDataId>Data Files/TD_Login/DataLogin</testDataId>
-      </testDataLink>
-      <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
-   </testCaseLink>
 </TestSuiteEntity>
