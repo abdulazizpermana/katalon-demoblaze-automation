@@ -1,6 +1,7 @@
 package dto.locator
 
 import com.kms.katalon.core.testobject.ConditionType
+
 import com.kms.katalon.core.testobject.TestObject
 
 /**
