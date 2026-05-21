@@ -1,58 +1,215 @@
 /**
- * Memverifikasi produk berhasil ditambahkan ke cart
- * setelah login valid.
- * @author NamaKamu - COE Team
- * @version 1.0.0
- * @date 2026-05-19
- * @see JIRA Ticket: QA-STORE-003
+ * TEST CASE: TC-STORE-005
+ * DESCRIPTION: Login lalu add produk ke cart
+ * EXPECTED RESULT: Alert "Product added" muncul
+ *
+ * @author Abdul Aziz Permana
+ * @version 3.0.0
  */
 
 import dto.pages.DemoLoginPage
 import dto.pages.DemoProductPage
+
 import utils.EvidenceReporter
 import utils.PdfReportKeyword
+
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
-import com.kms.katalon.core.testdata.TestDataFactory
+
 import internal.GlobalVariable
 
-def td = TestDataFactory.findTestData('TD_Store/DataStore')
-String username    = td.getValue('USERNAME', 5)
-String password    = td.getValue('PASSWORD', 5)
-String productName = td.getValue('PRODUCT_NAME', 5)
-String testCaseId  = td.getValue('TEST_CASE_ID', 5)
+// ======================================================
+// START TEST
+// ======================================================
 
-// ── Init evidence ────────────────────────────────────────────────
-EvidenceReporter.initEvidence(testCaseId)
+WebUI.comment("════════════════════════════════════════")
+WebUI.comment("▶ START: ${TEST_CASE_ID}")
+WebUI.comment("════════════════════════════════════════")
 
-WebUI.openBrowser('')
-WebUI.navigateToUrl(GlobalVariable.BASE_URL)
-WebUI.maximizeWindow()
-EvidenceReporter.captureStep(1, 'Open Web Page', 'PASS')
+EvidenceReporter.initEvidence(TEST_CASE_ID)
 
-// Login dulu
-DemoLoginPage loginPage = new DemoLoginPage()
-loginPage.login(username, password)
-loginPage.isWelcomeTextVisible()
-WebUI.comment("Login berhasil")
-EvidenceReporter.captureStep(2, 'Login Page', 'PASS')
+// ======================================================
+// INIT PAGE OBJECT
+// ======================================================
 
-// Pilih produk & add to cart
-DemoProductPage productPage = new DemoProductPage()
-productPage.clickProduct(productName)
-EvidenceReporter.captureStep(3, 'Select Product Page', 'PASS')
-WebUI.delay(2)
+DemoLoginPage loginPage =
+	new DemoLoginPage()
 
-productPage.clickAddToCart()
-productPage.handleAlert()
-EvidenceReporter.captureStep(4, 'Add to cart', 'PASS')
-WebUI.delay(2)
+DemoProductPage productPage =
+	new DemoProductPage()
 
-// ── Generate PDF ─────────────────────────────────────────────────
-PdfReportKeyword.generateReport(
-	testCaseId,
-	'Select Product Add to Cart',
-	'Abdul Aziz Permana',
-	EvidenceReporter.getStepList()
-)
+try {
 
-WebUI.closeBrowser()
+	// ======================================================
+	// STEP 1: OPEN STORE
+	// ======================================================
+
+	WebUI.comment(
+		"Step 1: Open Browser & Navigate"
+	)
+
+	WebUI.openBrowser('')
+
+	WebUI.navigateToUrl(
+		GlobalVariable.BASE_URL
+	)
+
+	WebUI.maximizeWindow()
+
+	EvidenceReporter.captureStep(
+		1,
+		'Open Store Page',
+		'PASS'
+	)
+
+	// ======================================================
+	// STEP 2: LOGIN
+	// ======================================================
+
+	WebUI.comment(
+		"Step 2: Login"
+	)
+
+	WebUI.comment(
+		"Username: ${USERNAME}"
+	)
+
+	loginPage.login(
+		USERNAME,
+		PASSWORD
+	)
+
+	loginPage.waitForWelcomeText()
+
+	boolean isLoginSuccess =
+		loginPage.isWelcomeTextVisible()
+
+	if(isLoginSuccess) {
+
+		WebUI.comment(
+			"✓ Login Success"
+		)
+
+		EvidenceReporter.captureStep(
+			2,
+			'Login Success',
+			'PASS'
+		)
+
+	} else {
+
+		throw new Exception(
+			'Login failed'
+		)
+	}
+
+	// ======================================================
+	// STEP 3: SELECT PRODUCT
+	// ======================================================
+
+	WebUI.comment(
+		"Step 3: Select Product"
+	)
+
+	WebUI.comment(
+		"Product: ${PRODUCT_NAME}"
+	)
+
+	productPage.clickProduct(
+		PRODUCT_NAME
+	)
+
+	WebUI.delay(2)
+
+	EvidenceReporter.captureStep(
+		3,
+		'Product Selected',
+		'PASS'
+	)
+
+	// ======================================================
+	// STEP 4: ADD TO CART
+	// ======================================================
+
+	WebUI.comment(
+		"Step 4: Add Product To Cart"
+	)
+
+	productPage.clickAddToCart()
+
+	// Tunggu alert
+	WebUI.waitForAlert(5)
+
+	// Ambil alert text
+	String alertText =
+		WebUI.getAlertText()
+
+	WebUI.comment(
+		"Alert: ${alertText}"
+	)
+
+	// Verify alert
+	WebUI.verifyMatch(
+		alertText,
+		'Product added.',
+		false
+	)
+
+	// Accept alert dulu
+	WebUI.acceptAlert()
+
+	WebUI.delay(1)
+
+	// Baru screenshot
+	EvidenceReporter.captureStep(
+		4,
+		"Product Added - Alert: ${alertText}",
+		'PASS'
+	)
+
+	// ======================================================
+	// STEP 5: GENERATE PDF
+	// ======================================================
+
+	PdfReportKeyword.generateReport(
+		TEST_CASE_ID,
+		'Verify product added to cart',
+		'Abdul Aziz Permana',
+		EvidenceReporter.getStepList()
+	)
+
+	EvidenceReporter.captureStep(
+		5,
+		'PDF Report Generated',
+		'PASS'
+	)
+
+	WebUI.comment(
+		"✓ PASSED: ${TEST_CASE_ID}"
+	)
+
+} catch(Exception e) {
+
+	WebUI.comment(
+		"✗ FAILED: ${e.getMessage()}"
+	)
+
+	EvidenceReporter.captureStep(
+		99,
+		"ERROR: ${e.getMessage()}",
+		'FAIL'
+	)
+
+	throw e
+
+} finally {
+
+	WebUI.closeBrowser()
+
+	WebUI.comment(
+		"Browser closed"
+	)
+}
+
+WebUI.comment("════════════════════════════════════════")
+WebUI.comment("END TEST")
+WebUI.comment("════════════════════════════════════════")
